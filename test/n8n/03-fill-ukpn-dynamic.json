@@ -1,0 +1,159 @@
+{
+  "name": "PDF Form Filler — UKPN Application (Dynamic Mapping)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c1b2c3d4-0003-4000-8000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "fromFile",
+        "filePath": "test/fixtures/ukpn14421-connections-applications-form_jan-2023_03.pdf"
+      },
+      "id": "c1b2c3d4-0003-4000-8000-000000000002",
+      "name": "Read UKPN PDF",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "d001", "name": "applicantTitle", "value": "Dr", "type": "string" },
+            { "id": "d002", "name": "applicantFirstName", "value": "Rainer", "type": "string" },
+            { "id": "d003", "name": "applicantLastName", "value": "Gaier", "type": "string" },
+            { "id": "d004", "name": "applicantCompany", "value": "Ovations Group", "type": "string" },
+            { "id": "d005", "name": "accountNo", "value": "ACC-2026-001", "type": "string" },
+            { "id": "d006", "name": "houseNo", "value": "15", "type": "string" },
+            { "id": "d007", "name": "street", "value": "Victoria Embankment", "type": "string" },
+            { "id": "d008", "name": "town", "value": "London", "type": "string" },
+            { "id": "d009", "name": "county", "value": "Greater London", "type": "string" },
+            { "id": "d010", "name": "postcode", "value": "EC4Y 0DZ", "type": "string" },
+            { "id": "d011", "name": "telephone", "value": "020 7123 4567", "type": "string" },
+            { "id": "d012", "name": "mobile", "value": "+44 7700 900000", "type": "string" },
+            { "id": "d013", "name": "email", "value": "rainer@ovationsgroup.com", "type": "string" },
+            { "id": "d014", "name": "siteHouseNo", "value": "7", "type": "string" },
+            { "id": "d015", "name": "siteBuildingName", "value": "Innovation Hub", "type": "string" },
+            { "id": "d016", "name": "siteStreet", "value": "Tech Park Drive", "type": "string" },
+            { "id": "d017", "name": "siteTown", "value": "Cambridge", "type": "string" },
+            { "id": "d018", "name": "siteCounty", "value": "Cambridgeshire", "type": "string" },
+            { "id": "d019", "name": "sitePostcode", "value": "CB1 2QA", "type": "string" },
+            { "id": "d020", "name": "what3words", "value": "filled.count.soap", "type": "string" },
+            { "id": "d021", "name": "previousOffer", "value": "No", "type": "string" },
+            { "id": "d022", "name": "projectDescription", "value": "New commercial development requiring 3-phase supply with solar PV generation and EV charging infrastructure.", "type": "string" },
+            { "id": "d023", "name": "phase", "value": "Three", "type": "string" },
+            { "id": "d024", "name": "quoteType", "value": "Formal", "type": "string" },
+            { "id": "d025", "name": "connectionType", "value": "Unconstrained", "type": "string" },
+            { "id": "d026", "name": "security", "value": "Single", "type": "string" },
+            { "id": "d027", "name": "contractorName", "value": "Bob Wilson", "type": "string" },
+            { "id": "d028", "name": "contractorCompany", "value": "Wilson Power Systems", "type": "string" },
+            { "id": "d029", "name": "contractorAddress", "value": "Unit 5, Industrial Estate", "type": "string" },
+            { "id": "d030", "name": "contractorPostcode", "value": "CB4 1XY", "type": "string" },
+            { "id": "d031", "name": "hpManufacturer", "value": "Mitsubishi Electric", "type": "string" },
+            { "id": "d032", "name": "hpModel", "value": "Ecodan PUZ-WM112", "type": "string" },
+            { "id": "d033", "name": "startDate", "value": "01/09/2026", "type": "string" },
+            { "id": "d034", "name": "jobDescription", "value": "Install new 3-phase 200A supply, 50kW solar PV array with battery storage, 10x 22kW EV charge points.", "type": "string" },
+            { "id": "d035", "name": "additionalInfo", "value": "Planning permission granted ref: CB/2026/0123.", "type": "string" },
+            { "id": "d036", "name": "signatoryName", "value": "Dr Rainer Gaier", "type": "string" },
+            { "id": "d037", "name": "signatoryCompany", "value": "Ovations Group", "type": "string" },
+            { "id": "d038", "name": "signatureDate", "value": "14/02/2026", "type": "string" }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "c1b2c3d4-0003-4000-8000-000000000003",
+      "name": "Set Application Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fieldMappings = [\n  { dataKey: 'applicantTitle', pdfField: 'A1-Title' },\n  { dataKey: 'applicantFirstName', pdfField: 'A1-First name' },\n  { dataKey: 'applicantLastName', pdfField: 'A1-Last name' },\n  { dataKey: 'applicantCompany', pdfField: 'A1-Company' },\n  { dataKey: 'accountNo', pdfField: 'A1-UKPN a/c no' },\n  { dataKey: 'houseNo', pdfField: 'A1-House No.undefined' },\n  { dataKey: 'street', pdfField: 'A1-Street' },\n  { dataKey: 'town', pdfField: 'A1-Town' },\n  { dataKey: 'county', pdfField: 'A1-County' },\n  { dataKey: 'postcode', pdfField: 'A1-Postcode' },\n  { dataKey: 'telephone', pdfField: 'A1-Telephone' },\n  { dataKey: 'mobile', pdfField: 'A1-Mobile' },\n  { dataKey: 'email', pdfField: 'A1-Email' },\n  { dataKey: 'siteHouseNo', pdfField: 'A3-House no' },\n  { dataKey: 'siteBuildingName', pdfField: 'A3-Building name' },\n  { dataKey: 'siteStreet', pdfField: 'A3-Street name' },\n  { dataKey: 'siteTown', pdfField: 'A3-Town/City' },\n  { dataKey: 'siteCounty', pdfField: 'A3-County' },\n  { dataKey: 'sitePostcode', pdfField: 'A3-Postcode' },\n  { dataKey: 'what3words', pdfField: 'A3-What3Words location' },\n  { dataKey: 'previousOffer', pdfField: 'A3-previous offer' },\n  { dataKey: 'projectDescription', pdfField: 'B' },\n  { dataKey: 'phase', pdfField: 'C-C Phase' },\n  { dataKey: 'quoteType', pdfField: 'D-Type of quote' },\n  { dataKey: 'connectionType', pdfField: 'E type of connection' },\n  { dataKey: 'security', pdfField: 'E security' },\n  { dataKey: 'contractorName', pdfField: 'F-Principal Contractor Name' },\n  { dataKey: 'contractorCompany', pdfField: 'F-Company name' },\n  { dataKey: 'contractorAddress', pdfField: 'F-Address' },\n  { dataKey: 'contractorPostcode', pdfField: 'F-Postcode ' },\n  { dataKey: 'hpManufacturer', pdfField: 'H2 Heat Pump Manufacturer' },\n  { dataKey: 'hpModel', pdfField: 'H2 Heat Pump Model' },\n  { dataKey: 'startDate', pdfField: 'J-Start date' },\n  { dataKey: 'jobDescription', pdfField: 'J-Description' },\n  { dataKey: 'additionalInfo', pdfField: 'K-Additional info 2' },\n  { dataKey: 'signatoryName', pdfField: 'L-Name 2' },\n  { dataKey: 'signatoryCompany', pdfField: 'L-Acting company 2' },\n  { dataKey: 'signatureDate', pdfField: 'L-Date 2' }\n];\n\nconst items = $input.all();\nreturn items.map(item => ({\n  json: { ...item.json, fieldMappings },\n  binary: item.binary\n}));"
+      },
+      "id": "c1b2c3d4-0003-4000-8000-000000000004",
+      "name": "Add Field Mappings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "operation": "fillForm",
+        "binaryPropertyName": "data",
+        "mappingSource": "dynamic",
+        "dynamicMappingProperty": "fieldMappings",
+        "outputBinaryProperty": "data",
+        "outputFileName": "ukpn-application-filled.pdf",
+        "warnOnMissingValues": true,
+        "defaultDateFormat": "DD/MM/YYYY"
+      },
+      "id": "c1b2c3d4-0003-4000-8000-000000000005",
+      "name": "Fill UKPN Form",
+      "type": "n8n-nodes-pdf-form-filler.pdfFormFiller",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read UKPN PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read UKPN PDF": {
+      "main": [
+        [
+          {
+            "node": "Set Application Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Application Data": {
+      "main": [
+        [
+          {
+            "node": "Add Field Mappings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Field Mappings": {
+      "main": [
+        [
+          {
+            "node": "Fill UKPN Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-14T00:00:00.000Z",
+  "versionId": "1"
+}

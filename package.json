@@ -1,0 +1,64 @@
+{
+  "name": "n8n-nodes-pdf-form-filler",
+  "version": "0.1.0",
+  "description": "n8n node to fill AcroForm PDF fields with JSON data",
+  "license": "MIT",
+  "homepage": "https://github.com/RainerGaier/n8n-nodes-pdf-form-filler#readme",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n-nodes",
+    "pdf",
+    "form",
+    "acroform",
+    "fill"
+  ],
+  "author": {
+    "name": "Rainer Gaier",
+    "email": "rainerg@ovationsgroup.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RainerGaier/n8n-nodes-pdf-form-filler.git"
+  },
+  "scripts": {
+    "build": "n8n-node build && npm run copy:codex",
+    "copy:codex": "cp nodes/PdfFormFiller/PdfFormFiller.node.json dist/nodes/PdfFormFiller/",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:manual": "npx ts-node test/manual/generateFilledPdf.ts",
+    "prepublishOnly": "n8n-node prerelease"
+  },
+  "files": [
+    "dist/"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [],
+    "nodes": [
+      "dist/nodes/PdfFormFiller/PdfFormFiller.node.js"
+    ]
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "*",
+    "@types/jest": "^29.5.14",
+    "eslint": "9.32.0",
+    "jest": "^29.7.0",
+    "prettier": "3.6.2",
+    "ts-jest": "^29.3.4",
+    "typescript": "5.9.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

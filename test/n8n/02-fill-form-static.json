@@ -1,0 +1,147 @@
+{
+  "name": "PDF Form Filler — Fill Form (Static Mapping)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b1b2c3d4-0002-4000-8000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "fromFile",
+        "filePath": "test/fixtures/ukpn14421-connections-applications-form_jan-2023_03.pdf"
+      },
+      "id": "b1b2c3d4-0002-4000-8000-000000000002",
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "f001", "name": "applicantTitle", "value": "Mr", "type": "string" },
+            { "id": "f002", "name": "applicantFirstName", "value": "John", "type": "string" },
+            { "id": "f003", "name": "applicantLastName", "value": "Smith", "type": "string" },
+            { "id": "f004", "name": "applicantCompany", "value": "Smith Electrical Ltd", "type": "string" },
+            { "id": "f005", "name": "applicantPhone", "value": "020 7946 0958", "type": "string" },
+            { "id": "f006", "name": "applicantMobile", "value": "07700 900123", "type": "string" },
+            { "id": "f007", "name": "applicantEmail", "value": "john.smith@example.com", "type": "string" },
+            { "id": "f008", "name": "houseNo", "value": "42", "type": "string" },
+            { "id": "f009", "name": "street", "value": "Baker Street", "type": "string" },
+            { "id": "f010", "name": "town", "value": "London", "type": "string" },
+            { "id": "f011", "name": "county", "value": "Greater London", "type": "string" },
+            { "id": "f012", "name": "postcode", "value": "NW1 6XE", "type": "string" },
+            { "id": "f013", "name": "siteHouseNo", "value": "10", "type": "string" },
+            { "id": "f014", "name": "siteStreet", "value": "Downing Street", "type": "string" },
+            { "id": "f015", "name": "siteTown", "value": "London", "type": "string" },
+            { "id": "f016", "name": "siteCounty", "value": "Greater London", "type": "string" },
+            { "id": "f017", "name": "sitePostcode", "value": "SW1A 2AA", "type": "string" },
+            { "id": "f018", "name": "description", "value": "New 3-phase supply for commercial kitchen extension", "type": "string" },
+            { "id": "f019", "name": "startDate", "value": "2026-06-01", "type": "string" },
+            { "id": "f020", "name": "signatoryName", "value": "John Smith", "type": "string" },
+            { "id": "f021", "name": "signatoryCompany", "value": "Smith Electrical Ltd", "type": "string" },
+            { "id": "f022", "name": "signatureDate", "value": "2026-02-14", "type": "string" }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "b1b2c3d4-0002-4000-8000-000000000003",
+      "name": "Set Form Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "fillForm",
+        "binaryPropertyName": "data",
+        "mappingSource": "static",
+        "fieldMappings": {
+          "entries": [
+            { "dataKey": "applicantTitle", "pdfField": "A1-Title" },
+            { "dataKey": "applicantFirstName", "pdfField": "A1-First name" },
+            { "dataKey": "applicantLastName", "pdfField": "A1-Last name" },
+            { "dataKey": "applicantCompany", "pdfField": "A1-Company" },
+            { "dataKey": "houseNo", "pdfField": "A1-House No.undefined" },
+            { "dataKey": "street", "pdfField": "A1-Street" },
+            { "dataKey": "town", "pdfField": "A1-Town" },
+            { "dataKey": "county", "pdfField": "A1-County" },
+            { "dataKey": "postcode", "pdfField": "A1-Postcode" },
+            { "dataKey": "applicantPhone", "pdfField": "A1-Telephone" },
+            { "dataKey": "applicantMobile", "pdfField": "A1-Mobile" },
+            { "dataKey": "applicantEmail", "pdfField": "A1-Email" },
+            { "dataKey": "siteHouseNo", "pdfField": "A3-House no" },
+            { "dataKey": "siteStreet", "pdfField": "A3-Street name" },
+            { "dataKey": "siteTown", "pdfField": "A3-Town/City" },
+            { "dataKey": "siteCounty", "pdfField": "A3-County" },
+            { "dataKey": "sitePostcode", "pdfField": "A3-Postcode" },
+            { "dataKey": "description", "pdfField": "B" },
+            { "dataKey": "startDate", "pdfField": "J-Start date", "dateFormat": "DD/MM/YYYY" },
+            { "dataKey": "signatoryName", "pdfField": "L-Name 2" },
+            { "dataKey": "signatoryCompany", "pdfField": "L-Acting company 2" },
+            { "dataKey": "signatureDate", "pdfField": "L-Date 2", "dateFormat": "DD/MM/YYYY" }
+          ]
+        },
+        "outputBinaryProperty": "data",
+        "outputFileName": "ukpn-filled-static.pdf",
+        "warnOnMissingValues": true,
+        "defaultDateFormat": "DD/MM/YYYY"
+      },
+      "id": "b1b2c3d4-0002-4000-8000-000000000005",
+      "name": "Fill Form",
+      "type": "n8n-nodes-pdf-form-filler.pdfFormFiller",
+      "typeVersion": 1,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Set Form Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Form Data": {
+      "main": [
+        [
+          {
+            "node": "Fill Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-14T00:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,68 @@
+{
+  "name": "PDF Form Filler — Discover Fields",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "fromFile",
+        "filePath": "test/fixtures/ukpn14421-connections-applications-form_jan-2023_03.pdf"
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000002",
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "discoverFields",
+        "binaryPropertyName": "data"
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000003",
+      "name": "Discover Fields",
+      "type": "n8n-nodes-pdf-form-filler.pdfFormFiller",
+      "typeVersion": 1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF": {
+      "main": [
+        [
+          {
+            "node": "Discover Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-14T00:00:00.000Z",
+  "versionId": "1"
+}
