@@ -1,71 +1,129 @@
-# Cloud Deployment Options
+# Deployment to Self-Hosted n8n
 
-Status: **Under consideration**
-Created: 2026-02-14
+**Status:** Ready
+**Created:** 2026-02-14
+**Updated:** 2026-02-15
 
-## Problem
+---
 
-The PDF Form Filler community node works on self-hosted n8n (local or Docker) but cannot run on **n8n Cloud** without going through the verified node submission process.
+## Context
 
-Colleagues are using n8n Cloud for their workflows.
+The team runs a **self-hosted n8n instance** in the cloud, administered by Rob. This simplifies deployment — self-hosted n8n supports custom community nodes without requiring npm publication or the n8n verified review process.
 
-## Options
+---
 
-### Option 1: Verified Community Node (Cloud-eligible)
+## Recommended Approach: Install from .tgz Package
 
-Publish to npm and submit for n8n's verified review process.
+A pre-built `.tgz` package is generated with `npm pack` and can be installed directly on the server.
 
-**Requirements:**
-- Package published to npm (name already compliant: `n8n-nodes-pdf-form-filler`)
-- **Zero runtime dependencies** — verified nodes must not have external `node_modules` deps
-- Pass n8n's automated checks and technical guidelines
-- MIT license (already in place)
+### Building the package (developer)
 
-**Blocker:** We depend on `pdf-lib` as a runtime dependency. To qualify, we would need to **bundle pdf-lib into the dist output** (e.g., via esbuild or webpack) so it ships as part of our code rather than as a separate npm dependency.
+```bash
+npm run build
+npm pack
+```
 
-**Action items:**
-1. Investigate bundling pdf-lib into dist (esbuild recommended)
-2. Verify bundled output still works with n8n's node loader
-3. Confirm n8n considers bundled code acceptable (vs. listed dependency)
-4. Publish to npm
-5. Submit for verified review via https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/
+This produces `n8n-nodes-pdf-form-filler-0.1.0.tgz` (≈24 KB). Send this file to the administrator.
 
-**Timeline:** Depends on n8n review queue after submission.
+### Installing on the server (administrator)
 
-### Option 2: Unverified npm Package (self-hosted only)
+**1. Ensure the custom nodes directory exists:**
 
-Publish to npm without verified review.
+```bash
+mkdir -p ~/.n8n/nodes
+cd ~/.n8n/nodes
+npm init -y          # only needed once, if no package.json exists
+```
 
-- Anyone on **self-hosted n8n** can install via Settings → Community Nodes → enter package name
-- **Not available on n8n Cloud**
-- No dependency restrictions
+**2. Install the package:**
 
-**Action items:**
-1. Publish to npm
-2. Colleagues would need to move to self-hosted n8n
+```bash
+npm install /path/to/n8n-nodes-pdf-form-filler-0.1.0.tgz
+```
 
-### Option 3: Private Deployment (self-hosted only)
+This installs the node and its sole dependency (`pdf-lib`).
 
-Don't publish to npm. Deploy directly to a self-hosted n8n instance.
+**3. Restart n8n:**
 
-**Methods:**
-- `npm link` (development)
-- Copy `dist/` into `~/.n8n/custom/` on the server
-- Bake into a custom Docker image
-- Use a private npm registry (e.g., Verdaccio)
+```bash
+# Systemd
+sudo systemctl restart n8n
 
-**Action items:**
-1. Set up self-hosted n8n (Docker recommended)
-2. Choose deployment method
-3. Document for team
+# PM2
+pm2 restart n8n
+
+# Docker
+docker restart <n8n-container>
+```
+
+The **PDF Form Filler** node will appear in the workflow editor under the Action nodes.
+
+### Docker-based n8n
+
+If n8n runs in Docker, there are two approaches:
+
+**Option A — Mount a volume** (no image rebuild):
+
+```bash
+# On the host, create the nodes directory and install
+mkdir -p /opt/n8n-data/nodes
+cd /opt/n8n-data/nodes
+npm init -y
+npm install /path/to/n8n-nodes-pdf-form-filler-0.1.0.tgz
+
+# Mount it into the container (add to docker run or docker-compose.yml)
+# -v /opt/n8n-data/nodes:/home/node/.n8n/nodes
+```
+
+**Option B — Custom Dockerfile** (baked into the image):
+
+```dockerfile
+FROM n8nio/n8n:latest
+COPY n8n-nodes-pdf-form-filler-0.1.0.tgz /tmp/
+RUN mkdir -p /home/node/.n8n/nodes && \
+    cd /home/node/.n8n/nodes && \
+    npm init -y && \
+    npm install /tmp/n8n-nodes-pdf-form-filler-0.1.0.tgz && \
+    rm /tmp/n8n-nodes-pdf-form-filler-0.1.0.tgz
+```
+
+---
+
+## Alternative: Install from GitHub
+
+Since the repository is public, the administrator can install directly without receiving a file:
+
+```bash
+cd ~/.n8n/nodes
+npm install github:RainerGaier/n8n-nodes-pdf-form-filler
+```
+
+This pulls the latest code from GitHub and builds it. Requires `git` on the server.
+
+---
+
+## Upgrading
+
+To install a newer version, repeat the install step with the new `.tgz` file (or re-run the GitHub install) and restart n8n. npm will replace the previous version automatically.
+
+---
+
+## Future Option: npm Publication
+
+If the node needs to be available to a wider audience or via n8n's built-in community node installer (Settings → Community Nodes), it can be published to npm:
+
+```bash
+npm publish
+```
+
+Once on npm, any self-hosted n8n instance can install it by name through the UI. n8n Cloud would additionally require passing the [verified node review process](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/), which has a zero-runtime-dependency requirement (pdf-lib would need bundling).
+
+This is not needed for the current self-hosted deployment.
+
+---
 
 ## References
 
-- [Install verified community nodes](https://docs.n8n.io/integrations/community-nodes/installation/verified-install/)
-- [Submit community nodes](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/)
-- [Install private nodes](https://docs.n8n.io/integrations/creating-nodes/deploy/install-private-nodes/)
-- [Community nodes on n8n Cloud (blog)](https://blog.n8n.io/community-nodes-available-on-n8n-cloud/)
-
-## Decision
-
-TBD — pending review of bundling feasibility and team requirements.
+- [Install private nodes (n8n docs)](https://docs.n8n.io/integrations/creating-nodes/deploy/install-private-nodes/)
+- [Submit community nodes (n8n docs)](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/)
+- GitHub repo: https://github.com/RainerGaier/n8n-nodes-pdf-form-filler
