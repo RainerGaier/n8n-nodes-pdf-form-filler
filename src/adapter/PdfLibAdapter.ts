@@ -114,12 +114,17 @@ export class PdfLibAdapter implements IPdfAdapter {
    */
   setTextField(fieldName: string, value: string): void {
     const form = this.getForm();
+    let field: PDFTextField;
     try {
-      const field = form.getTextField(fieldName);
-      field.setText(value);
-    } catch (error) {
-      if (error instanceof FieldNotFoundError) throw error;
+      field = form.getTextField(fieldName);
+    } catch {
       throw new FieldNotFoundError(fieldName);
+    }
+    const maxLength = field.getMaxLength();
+    if (maxLength !== undefined && value.length > maxLength) {
+      field.setText(value.slice(0, maxLength));
+    } else {
+      field.setText(value);
     }
   }
 

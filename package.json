@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/RainerGaier/n8n-nodes-pdf-form-filler.git"
+    "url": "git+https://github.com/RainerGaier/n8n-nodes-pdf-form-filler.git"
   },
   "scripts": {
     "build": "n8n-node build && npm run copy:codex",
@@ -29,8 +29,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:manual": "npx ts-node test/manual/generateFilledPdf.ts",
-    "prepublishOnly": "n8n-node prerelease"
+    "test:manual": "npx ts-node test/manual/generateFilledPdf.ts"
   },
   "files": [
     "dist/"
@@ -59,6 +58,6 @@
     "n8n-workflow": "*"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=18.0.0"
   }
 }
